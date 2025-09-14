@@ -213,10 +213,19 @@ curl -X GET http://localhost:8084/get-message
 
 ## Pruebas con Postman
 
-### Login Request
-- **URL**: `POST http://localhost:8084/auth/login`
-- **Headers**: `Content-Type: application/json`
-- **Body**:
+### 1. Login Request - Obtener Token JWT
+
+**Configuración:**
+- **Método**: `POST`
+- **URL**: `http://localhost:8084/auth/login`
+
+**Headers:**
+- `Content-Type: application/json`
+
+**Body:**
+- Seleccionar **"raw"**
+- En el dropdown seleccionar **"JSON"**
+- Contenido:
 ```json
 {
   "username": "admin",
@@ -224,9 +233,56 @@ curl -X GET http://localhost:8084/get-message
 }
 ```
 
-### Protected Endpoint Request
-- **URL**: `GET http://localhost:8084/get-message`
-- **Headers**: `Authorization: Bearer [TOKEN]`
+**Respuesta esperada:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "message": "Login exitoso"
+}
+```
+
+### 2. Endpoint Protegido - Get Message
+
+**Configuración:**
+- **Método**: `GET`
+- **URL**: `http://localhost:8084/get-message`
+
+**Headers:**
+- `Authorization: Bearer [COPIAR_TOKEN_AQUI]`
+
+**Ejemplo del header Authorization:**
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1NzgyNjkyNywiZXhwIjoxNzU3OTEzMzI3fQ.QBguLK8tyd4l_sp1ZddJ0oJY4QvuDTW3t_zuK3QXjAU
+```
+
+**Respuesta esperada:**
+```
+Mensaje seguro para usuario: admin | Hello from Eureka Client running on port: 8080
+```
+
+### 3. Validar Token (Opcional)
+
+**Configuración:**
+- **Método**: `GET`
+- **URL**: `http://localhost:8084/auth/validate`
+
+**Headers:**
+- `Authorization: Bearer [TOKEN]`
+
+**Respuesta esperada:**
+```json
+{
+  "token": null,
+  "message": "Token válido para usuario: admin"
+}
+```
+
+### Notas Importantes para Postman:
+
+1. **Copiar el token completo** de la respuesta del login
+2. **Incluir "Bearer "** (con espacio) antes del token en el header Authorization
+3. **No agregar comillas** alrededor del token
+4. **Los tokens expiran en 24 horas** - generar uno nuevo si es necesario
 
 ## Configuración
 
